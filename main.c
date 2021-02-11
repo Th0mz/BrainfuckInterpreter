@@ -38,6 +38,13 @@ CommandList* newBracket(int pairPosition, char type) {
   return newBracket;
 }
 
+void freeBracket(CommandList *sourceCode[MAX_COMMANDS], int numElements) {
+  for (int i = 0; i < numElements; i++) {
+    if (sourceCode[i]->cmd == '[' || sourceCode[i]->cmd == ']')
+      free(sourceCode[i]);
+  }
+}
+
 void addNewValidCommand(char cmd, CommandFunction cmdFunc, CommandList **head) {
   /* Creates a valid command */
   CommandList *newCommand = (CommandList*) malloc(sizeof(CommandList));
@@ -119,13 +126,14 @@ int inputValue (char **pointer, int programCounter, int bracketPair) {
 int startLoop(char **pointer, int programCounter, int bracketPair) { 
   /* If the byte at the data pointer is zero, then instead of moving the 
   instruction pointer forward to the next command, jump it forward to 
-            the command after the matching ] command. */ 
+            the command after the matching ] command.
   
-  /*  |---------l----------------------l---------------| 
-            14 = PC                 33 = BP
-              |---------------------->
-                        BP - PC + 1
+        |---------l----------------------l---------------| 
+               14 = PC                33 = BP
+                 |---------------------->
+                     BP - PC + 1 = jump
   */
+
   int jump = 1;
   if (**pointer == 0) 
     return (bracketPair - programCounter) + 1;
@@ -136,13 +144,14 @@ int startLoop(char **pointer, int programCounter, int bracketPair) {
 int endLoop(char **pointer, int programCounter, int bracketPair) { 
   /* If the byte at the data pointer is nonzero, then instead of moving
    the instruction pointer forward to the next command, jump it back to
-           the command after the matching [ command */
+            the command after the matching [ command
   
-    /*  |---------l----------------------l---------------| 
-            14 = BP                 33 = PC
-                <------------------------|
-                        BR - PC + 1
+        |---------l----------------------l---------------| 
+              14 = BP                 33 = PC
+                 <------------------------|
+                      BR - PC + 1 = jump
   */
+
   int jump = 1;
   if (**pointer != 0)
     return (bracketPair - programCounter) + 1;
@@ -205,10 +214,9 @@ int main(int argc, char *argv[]) {
         if (pairPosition < 0)
           parseError("Loop Error");
 
+        /* Create new instances with different bracket positions */
         sourceCode[pairPosition] = newBracket(insertPosition, '[');
         sourceCode[insertPosition] = newBracket(pairPosition, ']');
-
-        printf("(%d, %d)", pairPosition, insertPosition);
       }
       else
         sourceCode[insertPosition] = command;
@@ -219,9 +227,10 @@ int main(int argc, char *argv[]) {
 
   /* bracketFIFO is not going to be used anymore */
   freeList(bracketFIFO);
+  fclose(fpSource);
 
   /* DEBUG : Show the source code in the same line*/
-  printf("Source Code : \n");
+  printf("Source Code : ");
   for (int i = 0; i < insertPosition; i++) {
     printf("%c", sourceCode[i]->cmd);
   }
@@ -241,12 +250,14 @@ int main(int argc, char *argv[]) {
 
   /* Run the brainfuck program cycle */
   printf("Running the program...\n");
+  printf("  -> Output : ");
   while (programCounter < insertPosition) {
     int bracketPair = sourceCode[programCounter]->bracketPair;
     int jump = sourceCode[programCounter]->cmdFunc(&pointer, programCounter, bracketPair);
     programCounter += jump;
   }
 
+  freeBracket(sourceCode, insertPosition);
   freeCommandList(commandList);
   return 0;
 }
