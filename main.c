@@ -229,6 +229,7 @@ int main(int argc, char *argv[]) {
   freeList(bracketFIFO);
   fclose(fpSource);
 
+
   /* DEBUG : Show the source code in the same line*/
   printf("Source Code : ");
   for (int i = 0; i < insertPosition; i++) {
@@ -252,11 +253,20 @@ int main(int argc, char *argv[]) {
   printf("Running the program...\n");
   printf("  -> Output : ");
   while (programCounter < insertPosition) {
+    /* Only useful for loops, gets the loop end/beging so the compiler can
+       calculate the jump needed to keep inside the loop or get out */
     int bracketPair = sourceCode[programCounter]->bracketPair;
+
+    /* Read the command that the program counter is poiting[sourceCode[programCounter]]
+       at and execute his functionality[cmdFunc(...)] */
     int jump = sourceCode[programCounter]->cmdFunc(&pointer, programCounter, bracketPair);
+
+    /* Update the programCounter so it points to
+       the next instruction to execute */
     programCounter += jump;
   }
 
+  /* Free all allocated memory */
   freeBracket(sourceCode, insertPosition);
   freeCommandList(commandList);
   return 0;
