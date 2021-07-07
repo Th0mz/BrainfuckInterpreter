@@ -136,8 +136,10 @@ int startLoop(char **pointer, int programCounter, int bracketPair) {
 
   int jump = 1;
   if (**pointer == 0) 
+    /* End loop. PC now poiting for the next instruction next to the loop */
     return (bracketPair - programCounter) + 1;
   else 
+    /* Keep inside the loop */
     return 1; 
 }
 
