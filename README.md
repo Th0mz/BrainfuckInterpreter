@@ -5,7 +5,7 @@
 
 <br>
 
-- This programing language only has eight commands that are used to control a memory pointer. This pointer can change the content of the memory that he refers to.
+- This programing language only has eight commands that are used to control a memory pointer. This pointer can change the content of the memory that he refers to, and even display it to the console.
 
 <br>
 
