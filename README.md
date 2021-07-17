@@ -1,12 +1,13 @@
 ## BrainFuck
 ---
 
-- Brainfuck is a programming language designed to test the boundaries of computer programming language design, so called *esoteric programming language*.
+- Given the source code written in brainfuck, this program converts the brainfuck commands into C code that it can run.
+<br>
 
+- Brainfuck is a programming language designed to test the boundaries of computer programming language design, so called *esoteric programming language*.
 <br>
 
 - This programing language only has eight commands that are used to control a memory pointer. This pointer can change the content of the memory that he refers to, and even display it to the console.
-
 <br>
 
 - This commands are:
