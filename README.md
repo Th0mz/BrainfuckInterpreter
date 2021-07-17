@@ -23,6 +23,7 @@
 |   ]     | if the byte at the data pointer is nonzero, then instead of moving the instruction pointer forward to the next command, jump it back to the command after the matching [ command.                                                                 |
 
 <br>
+
 ---
 
 ### How to use it
@@ -39,4 +40,3 @@
         -> <path> :  Is the path to the source code (Ex: examples/helloWorld)
         -> <memorySize> : Memory size that the pointer can access
 
----
